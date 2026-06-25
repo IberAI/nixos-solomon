@@ -1,0 +1,5 @@
+mkdir -p "$HOME/Development"
+mkdir -p "$HOME/Tools"
+mkdir -p "$HOME/Documents"
+mkdir -p "$HOME/Downloads"
+mkdir -p "$HOME/Pictures/ScreenShots"

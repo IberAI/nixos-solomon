@@ -1,0 +1,17 @@
+[user]
+	name = Your Name
+	email = you@example.com
+
+[commit]
+	gpgsign = false
+
+[tag]
+	gpgsign = false
+
+# To enable signing privately, set the real key outside the repo:
+# [user]
+# 	signingkey = YOUR_PRIVATE_KEY_ID
+# [commit]
+# 	gpgsign = true
+# [tag]
+# 	gpgsign = true

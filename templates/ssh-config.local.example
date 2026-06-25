@@ -1,0 +1,3 @@
+Host github.com
+  IdentityFile ~/.ssh/YOUR_PRIVATE_KEY
+  IdentitiesOnly yes
