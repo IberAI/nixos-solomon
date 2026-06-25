@@ -1,0 +1,95 @@
+############################
+# Nix / NixOS / Home Manager
+############################
+
+# Nix build symlinks
+result
+result-*
+
+# Common Home Manager build symlinks
+home-manager-path
+home-path
+
+# If you ever copy these into the repo by mistake
+.nixos-*-backup
+
+########################
+# Local/private machine data
+########################
+
+# Keep identity, SSH host overrides, signing keys, tokens, and local
+# machine-specific values outside the committed flake.
+secrets/
+private/
+*.local.nix
+*.local
+local.inc
+.ssh/
+.gnupg/
+
+# Private Git and SSH include files referenced by the Home Manager config.
+git-local.inc
+ssh-config.local
+
+#############
+# direnv
+#############
+
+.direnv/
+.envrc.local
+.envrc
+# (Keep .envrc itself tracked if it just has `use flake` etc.)
+
+#############
+# Logs
+#############
+
+*.log
+*.log.*
+
+#####################
+# Editors & IDE junk
+#####################
+
+# Vim / Neovim
+*~
+*.swp
+*.swo
+
+# Emacs
+\#*\#
+.\#*
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# Other editor project files
+*.iml
+
+#####################
+# OS-specific trash
+#####################
+
+.DS_Store
+Thumbs.db
+
+#####################
+# Generic dev stuff
+#####################
+
+# Node / JS
+node_modules/
+dist/
+build/
+
+# Rust
+target/
+
+# Python
+__pycache__/
+*.py[cod]
+.env/
+.venv/
