@@ -1,4 +1,10 @@
-{config, lib, pkgs, profile, ...}: {
+{
+  config,
+  lib,
+  pkgs,
+  profile,
+  ...
+}: {
   config = lib.mkIf config.solomon.user.enable {
     users.users.${profile.username} = {
       isNormalUser = true;

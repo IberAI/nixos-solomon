@@ -13,6 +13,7 @@
       pkgs.dbus
       pkgs.i3
       pkgs.xorg.xsetroot
+      pkgs.xorg.setxkbmap
     ];
     text = builtins.readFile ../../scripts/xrdp-i3-session.sh;
   };

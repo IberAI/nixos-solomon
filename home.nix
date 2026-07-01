@@ -1,4 +1,8 @@
-{lib, profile, ...}: {
+{
+  lib,
+  profile,
+  ...
+}: {
   imports = [
     ./home/desktop/default.nix
     ./home/apps/default.nix

@@ -1,4 +1,8 @@
-{pkgs, profile, ...}: {
+{
+  pkgs,
+  profile,
+  ...
+}: {
   networking = {
     hostName = profile.hostName;
 
@@ -13,5 +17,10 @@
     firewall = {
       enable = true;
     };
+  };
+
+  services.tor = {
+    enable = true;
+    client.enable = true;
   };
 }

@@ -8,7 +8,7 @@
       # Make sure Maple Mono NF is installed somewhere in your config.
       # If it is not available, switch this to "FiraCode Nerd Font".
       name = "Maple Mono NF";
-      size = 10;
+      size = 15;
     };
 
     shellIntegration = {

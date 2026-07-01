@@ -1,4 +1,10 @@
-{config, inputs, lib, profile, ...}: {
+{
+  config,
+  inputs,
+  lib,
+  profile,
+  ...
+}: {
   config = lib.mkIf config.solomon.home.enable {
     home-manager = {
       useGlobalPkgs = true;

@@ -9,23 +9,19 @@
   ...
 }: {
   imports = [];
-  boot = {
-    initrd = {
-      availableKernelModules = ["sd_mod" "sr_mod"];
-      kernelModules = [];
-    };
 
-    kernelModules = [];
-    extraModulePackages = [];
-  };
+  boot.initrd.availableKernelModules = ["sd_mod" "sr_mod"];
+  boot.initrd.kernelModules = [];
+  boot.kernelModules = [];
+  boot.extraModulePackages = [];
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/25afce2e-1a9a-4f65-8f8f-f034c58f5f05";
+    device = "/dev/disk/by-uuid/505bd4ed-5f5e-4667-9b74-bb5688a9eed2";
     fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/6076-DD72";
+    device = "/dev/disk/by-uuid/66FD-6019";
     fsType = "vfat";
     options = ["fmask=0077" "dmask=0077"];
   };
@@ -33,4 +29,5 @@
   swapDevices = [];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  virtualisation.hypervGuest.enable = true;
 }

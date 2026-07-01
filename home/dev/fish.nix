@@ -110,7 +110,6 @@
       grep = "grep --color=auto";
       ip = "ip --color=auto";
       diff = "diff --color=auto";
-
       please = "sudo";
       nd = "nix develop --command fish";
       rebuild = "sudo nixos-rebuild switch --flake .";
@@ -132,7 +131,16 @@
           and cd $argv[1]
         '';
       };
-
+      sx = {
+        description = "Attach to SimpleX tmux session or start SimpleX over Tor";
+        body = ''
+          if tmux has-session -t simplex 2>/dev/null
+            tmux attach -t simplex
+          else
+            tmux new-session -s simplex -- simplex-tor
+          end
+        '';
+      };
       extract = {
         description = "Extract common archive formats";
         body = ''

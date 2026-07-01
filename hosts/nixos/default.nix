@@ -7,6 +7,7 @@
     ../../profiles/hyperv-vm.nix
 
     ../../modules/profile.nix
+
     ../../modules/boot.nix
     ../../modules/nix.nix
     ../../modules/networking.nix

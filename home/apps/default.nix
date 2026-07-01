@@ -1,6 +1,8 @@
 {pkgs, ...}: {
   imports = [
     ./sioyek.nix
+    ./simplex/simplex.nix
+    ./simplex/simplex-profile.nix
   ];
 
   home.packages = with pkgs; [

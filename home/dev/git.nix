@@ -1,4 +1,8 @@
-{pkgs, profile, ...}: {
+{
+  pkgs,
+  profile,
+  ...
+}: {
   programs.gpg.enable = true;
 
   programs.git = {
