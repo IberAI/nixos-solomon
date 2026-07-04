@@ -7,33 +7,36 @@
     enable = true;
     package = pkgs.openssh;
 
-    # Stop relying on Home Manager's old defaults.
     enableDefaultConfig = false;
 
-    # This gets emitted near the top of ~/.ssh/config.
     includes = [
       profile.privateIncludes.ssh
     ];
 
-    settings = {
+    matchBlocks = {
       "*" = {
-        AddKeysToAgent = "yes";
-        ServerAliveInterval = 60;
-        ServerAliveCountMax = 3;
-        HashKnownHosts = true;
+        addKeysToAgent = "yes";
+        serverAliveInterval = 60;
+        serverAliveCountMax = 3;
+        hashKnownHosts = true;
 
-        # Explicitly preserve sane old/default-ish values.
-        ForwardAgent = false;
-        Compression = false;
-        UserKnownHostsFile = "~/.ssh/known_hosts";
-        ControlMaster = "no";
-        ControlPath = "~/.ssh/master-%r@%n:%p";
-        ControlPersist = "no";
+        forwardAgent = false;
+        compression = false;
+        userKnownHostsFile = "~/.ssh/known_hosts";
+        controlMaster = "no";
+        controlPath = "~/.ssh/master-%r@%n:%p";
+        controlPersist = "no";
       };
 
       "github.com" = {
-        HostName = "github.com";
-        User = "git";
+        hostname = "github.com";
+        user = "git";
+      };
+      "codeberg.org" = {
+        hostname = "codeberg.org";
+        user = "git";
+        identityFile = "~/.ssh/id_ed25519_codeberg";
+        identitiesOnly = true;
       };
     };
   };
