@@ -8,6 +8,7 @@
   home.packages = with pkgs; [
     mullvad-browser
     wireshark
+    xnec2c
     mpv
     gimp
   ];
