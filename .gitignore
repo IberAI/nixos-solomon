@@ -30,6 +30,9 @@ local.inc
 # Private Git and SSH include files referenced by the Home Manager config.
 git-local.inc
 ssh-config.local
+smp.env
+smp-password
+.config/simplex/
 
 #############
 # direnv

@@ -2,10 +2,10 @@
   description = "Solomon's NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -29,9 +29,7 @@
   outputs = inputs @ {
     self,
     nixpkgs,
-    home-manager,
     nur,
-    nix4nvchad,
     ...
   }: let
     profile = import ./lib/profile.nix;
@@ -56,7 +54,17 @@
     # Run:
     #   nix fmt
 
-    formatter.${system} = pkgs.alejandra;
+    formatter.${system} = pkgs.writeShellApplication {
+      name = "nixos-solomon-fmt";
+      runtimeInputs = [pkgs.alejandra];
+      text = ''
+        if [ "$#" -eq 0 ]; then
+          exec alejandra .
+        fi
+
+        exec alejandra "$@"
+      '';
+    };
 
     ########################################
     # Dev shell
@@ -72,6 +80,10 @@
         statix
         just
         nix-tree
+        nix-output-monitor
+        nix-index
+        nvd
+        nh
         nil
         nixd
       ];
@@ -113,6 +125,42 @@
           statix check ${self}
           touch $out
         '';
+    };
+
+    ########################################
+    # Flake templates
+    ########################################
+    #
+    # Run from a new project directory:
+    #   nix flake init -t /path/to/nixos-solomon#dev-project
+
+    templates = {
+      dev-project = {
+        path = ./templates/dev-project;
+        description = "General Nix 26.05 development flake with JS, C/C++, CUDA, Python, and tooling shells.";
+        welcomeText = ''
+          # General Development Flake
+
+          Edit the top section of `flake.nix`, delete package categories you do
+          not need, then run:
+
+          ```sh
+          nix develop
+          nix flake check
+          ```
+
+          Named shells:
+
+          - `nix develop .#default`
+          - `nix develop .#js`
+          - `nix develop .#c`
+          - `nix develop .#cuda`
+          - `nix develop .#python`
+          - `nix develop .#full`
+        '';
+      };
+
+      default = self.templates.dev-project;
     };
 
     ########################################
