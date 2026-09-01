@@ -1,3 +1,11 @@
 Host github.com
-  IdentityFile ~/.ssh/YOUR_PRIVATE_KEY
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/YOUR_GITHUB_PRIVATE_KEY
+  IdentitiesOnly yes
+
+Host codeberg.org
+  HostName codeberg.org
+  User git
+  IdentityFile ~/.ssh/YOUR_CODEBERG_PRIVATE_KEY
   IdentitiesOnly yes
