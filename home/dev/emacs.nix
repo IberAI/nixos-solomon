@@ -41,6 +41,7 @@
     (setq auto-window-vscroll nil)
 
     ;; Font
+    ;; Provided by nerd-fonts.jetbrains-mono in home.packages above.
     (set-face-attribute 'default nil
                         :family "JetBrainsMono Nerd Font"
                         :height 150

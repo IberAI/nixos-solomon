@@ -1,13 +1,24 @@
-# home/apps/kitty.nix
-{pkgs, ...}: {
+# home/dev/kitty.nix
+{
+  pkgs,
+  profile,
+  ...
+}: {
+  # TERMINAL is owned by the terminal, not by the desktop module or the shell.
+  home.sessionVariables = {
+    TERMINAL = profile.desktop.terminal;
+  };
+
   programs.kitty = {
     enable = true;
     package = pkgs.kitty;
 
     font = {
-      # Make sure Maple Mono NF is installed somewhere in your config.
-      # If it is not available, switch this to "FiraCode Nerd Font".
-      name = "Maple Mono NF";
+      # The Mono variant, not the plain "FiraCode Nerd Font": outside the Mono
+      # cut the patched icon glyphs are about one and a half cells wide, which
+      # makes them spill over the next column in a cell-based terminal. Comes
+      # from nerd-fonts.fira-code in modules/desktop/sway.nix.
+      name = "FiraCode Nerd Font Mono";
       size = 15;
     };
 
@@ -29,14 +40,13 @@
       wheel_scroll_multiplier = 3.0;
 
       ########################################
-      # i3/X11-friendly window behavior
+      # Window behavior
       ########################################
 
       remember_window_size = false;
       initial_window_width = 1000;
       initial_window_height = 650;
 
-      # i3 already handles outer gaps/borders.
       window_padding_width = 4;
       window_margin_width = 0;
 
@@ -55,7 +65,7 @@
       # URL handling
       ########################################
       # Kitty will use xdg-open/default browser.
-      # Your shell/i3 config sets BROWSER=mullvad-browser.
+      # home/apps/browsers.nix sets BROWSER.
 
       open_url_with = "default";
       detect_urls = true;

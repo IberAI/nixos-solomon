@@ -8,11 +8,11 @@
 
   simplexChatCli = pkgs.stdenv.mkDerivation rec {
     pname = "simplex-chat-cli";
-    version = cfg.version;
+    inherit (cfg) version;
 
     src = pkgs.fetchurl {
       url = "https://github.com/simplex-chat/simplex-chat/releases/download/v${version}/simplex-chat-ubuntu-24_04-x86_64";
-      hash = cfg.hash;
+      inherit (cfg) hash;
     };
 
     nativeBuildInputs = with pkgs; [
@@ -63,19 +63,26 @@
     text = ''
       set -euo pipefail
 
-      password_file="${cfg.smp.passwordFile}"
+      config_file="${cfg.smpConfigFile}"
 
-      if [ ! -r "$password_file" ]; then
-        echo "simplex-tor: SMP password file is missing or unreadable: $password_file" >&2
+      if [ ! -r "$config_file" ]; then
+        echo "simplex-tor: config file is missing or unreadable: $config_file" >&2
         exit 1
       fi
 
-      smp_password="$(tr -d '\n' < "$password_file")"
+      set -a
+      # shellcheck disable=SC1090
+      . "$config_file"
+      set +a
+
+      : "''${SIMPLEX_SMP_FINGERPRINT:?missing SIMPLEX_SMP_FINGERPRINT}"
+      : "''${SIMPLEX_SMP_ONION_HOST:?missing SIMPLEX_SMP_ONION_HOST}"
+      : "''${SIMPLEX_SMP_PASSWORD:?missing SIMPLEX_SMP_PASSWORD}"
 
       exec ${simplexChatCli}/bin/simplex-chat \
         -d "$HOME/.simplex/${cfg.profile}" \
         --socks-proxy="${cfg.tor.socksProxy}" \
-        -s "smp://${cfg.smp.fingerprint}:$smp_password@${cfg.smp.onionHost}"
+        -s "smp://$SIMPLEX_SMP_FINGERPRINT:$SIMPLEX_SMP_PASSWORD@$SIMPLEX_SMP_ONION_HOST"
     '';
   };
 in {
@@ -100,25 +107,16 @@ in {
       description = "SimpleX local profile/database name.";
     };
 
+    smpConfigFile = lib.mkOption {
+      type = lib.types.str;
+      default = "\${HOME}/.config/simplex/smp.env";
+      description = "Runtime path to a private shell env file with SMP connection values.";
+    };
+
     tor.socksProxy = lib.mkOption {
       type = lib.types.str;
       default = "127.0.0.1:9050";
       description = "Tor SOCKS proxy used by SimpleX.";
-    };
-
-    smp.fingerprint = lib.mkOption {
-      type = lib.types.str;
-      description = "SMP server certificate fingerprint.";
-    };
-
-    smp.onionHost = lib.mkOption {
-      type = lib.types.str;
-      description = "SMP server onion hostname.";
-    };
-
-    smp.passwordFile = lib.mkOption {
-      type = lib.types.str;
-      description = "Runtime path to the SMP create-password secret.";
     };
   };
 

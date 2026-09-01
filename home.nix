@@ -4,19 +4,21 @@
   ...
 }: {
   imports = [
-    ./home/desktop/default.nix
     ./home/apps/default.nix
+    ./home/desktop/default.nix
     ./home/dev/default.nix
+    ./home/services/default.nix
   ];
 
   programs.home-manager.enable = true;
 
-  home = {
-    # keep this aligned with when you first started using HM on this machine
-    stateVersion = "25.11";
+  systemd.user.startServices = "sd-switch";
 
-    username = profile.username;
-    homeDirectory = profile.homeDirectory;
+  home = {
+    # This branch is for a fresh NixOS 26.05 installation.
+    stateVersion = "26.05";
+
+    inherit (profile) username homeDirectory;
 
     activation.createBaseDirs = lib.hm.dag.entryAfter ["writeBoundary"] (
       builtins.readFile ./scripts/create-base-dirs.sh
@@ -27,7 +29,27 @@
     ];
   };
 
-  # Optional but very common quality-of-life:
-  # enable XDG base dirs so apps cooperate nicely
-  xdg.enable = true;
+  xdg = {
+    enable = true;
+
+    userDirs = {
+      enable = true;
+      createDirectories = true;
+
+      desktop = "${profile.homeDirectory}/Desktop";
+      documents = "${profile.homeDirectory}/Documents";
+      download = "${profile.homeDirectory}/Downloads";
+      music = "${profile.homeDirectory}/Music";
+      pictures = "${profile.homeDirectory}/Pictures";
+      publicShare = "${profile.homeDirectory}/Public";
+      templates = "${profile.homeDirectory}/Templates";
+      videos = "${profile.homeDirectory}/Videos";
+
+      extraConfig = {
+        SCREENSHOTS = "${profile.homeDirectory}/Pictures/ScreenShots";
+        DEVELOPMENT = "${profile.homeDirectory}/Development";
+        TOOLS = "${profile.homeDirectory}/Tools";
+      };
+    };
+  };
 }

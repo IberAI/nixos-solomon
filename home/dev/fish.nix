@@ -15,20 +15,12 @@
       # Disable greeting
       set -g fish_greeting
 
-      # Editor / pager
-      set -gx EDITOR nvim
-      set -gx VISUAL nvim
+      # Pager. The shell owns these two; it does not own EDITOR/VISUAL
+      # (home/dev/nvchad.nix), TERMINAL (home/dev/kitty.nix) or BROWSER
+      # (home/apps/browsers.nix), and it does not own XDG_CONFIG_HOME and
+      # friends either, which xdg.enable already exports.
       set -gx PAGER less
       set -gx LESS "-R"
-
-      # Desktop defaults for your i3 stack
-      set -gx TERMINAL kitty
-      set -gx BROWSER mullvad-browser
-
-      # XDG niceties
-      set -gx XDG_CONFIG_HOME "$HOME/.config"
-      set -gx XDG_DATA_HOME "$HOME/.local/share"
-      set -gx XDG_CACHE_HOME "$HOME/.cache"
 
       # User paths
       fish_add_path -g \

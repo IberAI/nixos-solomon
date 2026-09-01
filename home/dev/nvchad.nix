@@ -8,6 +8,13 @@
     inputs.nix4nvchad.homeManagerModules.default
   ];
 
+  # EDITOR/VISUAL are owned by the editor rather than by the system programs
+  # module and the fish rc.
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+  };
+
   programs.nvchad = {
     enable = true;
 
@@ -44,9 +51,9 @@
       # Web LSPs
       ########################################
 
-      nodePackages.typescript-language-server
-      nodePackages.vscode-langservers-extracted
-      nodePackages.svelte-language-server
+      typescript-language-server
+      vscode-langservers-extracted
+      svelte-language-server
 
       ########################################
       # Deno / Supabase Edge Functions
@@ -70,7 +77,7 @@
       # Web formatters
       ########################################
 
-      nodePackages.prettier
+      prettier
 
       ########################################
       # Shell LSP / formatter / linter

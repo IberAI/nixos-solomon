@@ -1,18 +1,10 @@
-{pkgs, ...}: {
+_: {
   imports = [
-    ./sioyek.nix
-    ./simplex/simplex.nix
-    ./simplex/simplex-profile.nix
+    ./browsers.nix
+    ./graphics.nix
+    ./media.nix
+    ./security.nix
+    ./scientific.nix
+    ./messaging/default.nix
   ];
-
-  home.packages = with pkgs; [
-    mullvad-browser
-    wireshark
-    xnec2c
-    mpv
-    gimp
-  ];
-  home.sessionVariables = {
-    MOZ_LEGACY_PROFILES = "1";
-  };
 }
