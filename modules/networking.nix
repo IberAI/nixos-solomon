@@ -4,7 +4,7 @@
   ...
 }: {
   networking = {
-    hostName = profile.hostName;
+    inherit (profile) hostName;
 
     networkmanager = {
       enable = true;
@@ -17,10 +17,5 @@
     firewall = {
       enable = true;
     };
-  };
-
-  services.tor = {
-    enable = true;
-    client.enable = true;
   };
 }

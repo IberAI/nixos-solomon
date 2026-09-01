@@ -11,37 +11,17 @@
   };
 
   environment = {
-    sessionVariables = {
-      EDITOR = "nvim";
-      VISUAL = "nvim";
-    };
-
+    # EDITOR/VISUAL moved to home/dev/nvchad.nix, which is where the editor
+    # itself is configured.
     systemPackages = with pkgs; [
       git
       curl
       wget
       vim
       docker-compose
-
-      xorg.xrandr
-      xorg.xset
-      xorg.xprop
-      xorg.xwininfo
-      xorg.setxkbmap
-      xorg.xev
-      xorg.xmodmap
-      xorg.xkeyboardconfig
-
       iproute2
       procps
       lsof
-
-      i3
-      i3status
-      i3lock
-      rofi
-      xclip
-      xsel
     ];
   };
 }

@@ -16,6 +16,8 @@
         "video"
         "networkmanager"
         "docker"
+        # Required to use the dumpcap wrapper from programs.wireshark.
+        "wireshark"
       ];
 
       shell = pkgs.fish;
