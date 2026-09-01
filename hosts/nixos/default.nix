@@ -4,27 +4,29 @@
 
     inputs.home-manager.nixosModules.default
 
-    ../../profiles/hyperv-vm.nix
+    ../../profiles/native.nix
 
     ../../modules/profile.nix
 
     ../../modules/boot.nix
     ../../modules/nix.nix
     ../../modules/networking.nix
+    ../../modules/networking/i2p.nix
     ../../modules/locale.nix
-    ../../modules/desktop/x11.nix
-    ../../modules/desktop/i3.nix
-    ../../modules/desktop/xrdp-enhanced-session.nix
+    ../../modules/desktop/sway.nix
     ../../modules/audio.nix
+    ../../modules/bluetooth.nix
+    ../../modules/graphics/nvidia.nix
     ../../modules/services.nix
     ../../modules/portals.nix
     ../../modules/users.nix
     ../../modules/security.nix
     ../../modules/programs.nix
+    ../../modules/streaming/obs.nix
+    ../../modules/streaming/gpu-screen-recorder.nix
     ../../modules/virtualisation/docker.nix
-    ../../modules/virtualisation/hyperv-guest.nix
     ../../modules/home-manager.nix
   ];
 
-  system.stateVersion = "25.11";
+  system.stateVersion = "26.05";
 }
