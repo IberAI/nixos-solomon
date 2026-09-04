@@ -39,14 +39,14 @@
       desktop = "${profile.homeDirectory}/Desktop";
       documents = "${profile.homeDirectory}/Documents";
       download = "${profile.homeDirectory}/Downloads";
-      music = "${profile.homeDirectory}/Music";
-      pictures = "${profile.homeDirectory}/Pictures";
+      music = "${profile.homeDirectory}/Media/Music";
+      pictures = "${profile.homeDirectory}/Media/Pictures";
       publicShare = "${profile.homeDirectory}/Public";
       templates = "${profile.homeDirectory}/Templates";
-      videos = "${profile.homeDirectory}/Videos";
+      videos = "${profile.homeDirectory}/Media/Videos";
 
       extraConfig = {
-        SCREENSHOTS = "${profile.homeDirectory}/Pictures/ScreenShots";
+        SCREENSHOTS = "${profile.homeDirectory}/Media/Pictures/ScreenShots";
         DEVELOPMENT = "${profile.homeDirectory}/Development";
         TOOLS = "${profile.homeDirectory}/Tools";
       };
