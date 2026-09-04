@@ -36,7 +36,6 @@
       enable = true;
       createDirectories = true;
 
-      desktop = "${profile.homeDirectory}/Desktop";
       documents = "${profile.homeDirectory}/Documents";
       download = "${profile.homeDirectory}/Downloads";
       music = "${profile.homeDirectory}/Media/Music";
