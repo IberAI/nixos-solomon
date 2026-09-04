@@ -15,17 +15,17 @@ Two option catalogues are worth keeping open while reading this:
 
 ## Entry points
 
-| File | Role |
-| --- | --- |
-| `flake.nix` | Inputs, formatter, dev shell, `checks`, templates, `nixosConfigurations.nixos` |
-| `configuration.nix` | Thin wrapper importing `hosts/nixos` |
-| `hosts/nixos/default.nix` | Host entry point: imports every module, sets `system.stateVersion` |
-| `hosts/nixos/hardware-configuration.nix` | Generated per machine, never edited by hand |
-| `profiles/native.nix` | Chooses which `solomon.*` features are on |
-| `modules/profile.nix` | Declares every `solomon.*` option |
-| `lib/profile.nix` | Non-secret shared facts: username, hostname, locale, keyboard, default apps |
-| `home.nix` | Home Manager entry point |
-| `Justfile` | `just fmt`, `check`, `lint`, `build`, `test`, `switch` |
+| File                                     | Role                                                                           |
+| ---------------------------------------- | ------------------------------------------------------------------------------ |
+| `flake.nix`                              | Inputs, formatter, dev shell, `checks`, templates, `nixosConfigurations.nixos` |
+| `configuration.nix`                      | Thin wrapper importing `hosts/nixos`                                           |
+| `hosts/nixos/default.nix`                | Host entry point: imports every module, sets `system.stateVersion`             |
+| `hosts/nixos/hardware-configuration.nix` | Generated per machine, never edited by hand                                    |
+| `profiles/native.nix`                    | Chooses which `solomon.*` features are on                                      |
+| `modules/profile.nix`                    | Declares every `solomon.*` option                                              |
+| `lib/profile.nix`                        | Non-secret shared facts: username, hostname, locale, keyboard, default apps    |
+| `home.nix`                               | Home Manager entry point                                                       |
+| `Justfile`                               | `just fmt`, `check`, `lint`, `build`, `test`, `switch`                         |
 
 Relevant reading: [NixOS modules](https://nixos.org/manual/nixos/stable/#sec-writing-modules),
 [flakes](https://wiki.nixos.org/wiki/Flakes), [nix.dev](https://nix.dev/).
@@ -55,11 +55,11 @@ Timezone, locale, `LC_*` overrides, and **the keyboard**.
 The keyboard is the subtle part. `lib/profile.nix` is the single source, but
 three independent consumers need it and no single option feeds all three:
 
-| Consumer | Option set here |
-| --- | --- |
-| Linux console, including the `greetd`/`tuigreet` password prompt | `console.keyMap` |
-| X11 clients running under XWayland | `services.xserver.xkb` |
-| sway itself | *not here* — see `home/desktop/sway.nix` |
+| Consumer                                                         | Option set here                          |
+| ---------------------------------------------------------------- | ---------------------------------------- |
+| Linux console, including the `greetd`/`tuigreet` password prompt | `console.keyMap`                         |
+| X11 clients running under XWayland                               | `services.xserver.xkb`                   |
+| sway itself                                                      | _not here_ — see `home/desktop/sway.nix` |
 
 Nixpkgs exports no `XKB_DEFAULT_*` variables, so `services.xserver.xkb` never
 reaches a Wayland compositor on its own.
@@ -189,7 +189,7 @@ default is `wireshark-cli`, so the GUI is requested explicitly.
 
 ### `modules/programs.nix`
 
-fish, `nm-applet` (as a user service — it is deliberately *not* also launched
+fish, `nm-applet` (as a user service — it is deliberately _not_ also launched
 from the sway `startup` block), `nix-ld`, the GPG agent, and base CLI packages.
 
 - [nix-ld](https://github.com/nix-community/nix-ld)
@@ -208,18 +208,6 @@ OBS Studio wrapped with `input-overlay`, `obs-pipewire-audio-capture`,
   [obs-vertical-canvas](https://github.com/Aitum/obs-vertical-canvas) ·
   [wlrobs](https://hg.sr.ht/~scoopta/wlrobs)
 - [v4l2loopback](https://github.com/umlaeute/v4l2loopback)
-
-### `modules/streaming/gpu-screen-recorder.nix` — `solomon.streaming.gpuScreenRecorder.enable`
-
-Low-overhead GPU-encoded capture and RTMP streaming. The NixOS module is what
-provides the `gsr-kms-server` setcap wrapper that KMS capture needs.
-
-Each entry in `.targets` generates a `stream-<name>` command. Stream keys are
-read at run time from `keyFile` (mode 600 enforced) and never enter the Nix
-store. See [Streaming](../README.md#streaming).
-
-- [GPU Screen Recorder](https://git.dec05eba.com/gpu-screen-recorder/about/)
-- [NixOS wiki page](https://wiki.nixos.org/wiki/Gpu-screen-recorder)
 
 ### `modules/virtualisation/docker.nix` — `solomon.virtualisation.docker.enable`
 

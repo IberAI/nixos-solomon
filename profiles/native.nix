@@ -13,7 +13,19 @@ _: {
     networking.i2p.enable = true;
 
     streaming = {
-      obs.enable = true;
+      gpuScreenRecorder = {
+        enable = true;
+
+        # Add a destination here to get a `stream-<name>` command. The key never
+        # belongs in this file; it is read at run time from keyFile, which
+        # defaults to ~/.config/gpu-screen-recorder/<name>.key (mode 600).
+        #
+        # targets.twitch = {
+        #   url = "rtmp://live.twitch.tv/app";
+        #   bitrate = 6000;
+        # };
+        targets = {};
+      };
     };
 
     virtualisation.docker.enable = true;

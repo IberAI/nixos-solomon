@@ -22,7 +22,7 @@
     ../../modules/users.nix
     ../../modules/security.nix
     ../../modules/programs.nix
-    ../../modules/streaming/obs.nix
+    ../../modules/streaming/gpu-screen-recorder.nix
     ../../modules/virtualisation/docker.nix
     ../../modules/home-manager.nix
   ];
