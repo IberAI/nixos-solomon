@@ -13,48 +13,43 @@
       profile.privateIncludes.ssh
     ];
 
-    matchBlocks = {
+    settings = {
+      # Global options (formerly Host "*")
+      "*" = {
+        ForwardAgent = false;
+        ServerAliveInterval = 60;
+        ServerAliveCountMax = 3;
+        Compression = false;
+        AddKeysToAgent = "yes";
+        HashKnownHosts = true;
+        UserKnownHostsFile = "~/.ssh/known_hosts";
+        ControlMaster = "no";
+        ControlPath = "~/.ssh/master-%r@%n:%p";
+        ControlPersist = "no";
+      };
+
       "github.com" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = "~/.ssh/id_ed25519_github";
-        identitiesOnly = true;
-        addKeysToAgent = "yes";
+        HostName = "github.com";
+        User = "git";
+        IdentityFile = "~/.ssh/id_ed25519_github";
+        IdentitiesOnly = true;
+        AddKeysToAgent = "yes";
       };
 
       "codeberg.org" = {
-        hostname = "codeberg.org";
-        user = "git";
-        identityFile = "~/.ssh/id_ed25519_codeberg";
-        identitiesOnly = true;
-        addKeysToAgent = "yes";
+        HostName = "codeberg.org";
+        User = "git";
+        IdentityFile = "~/.ssh/id_ed25519_codeberg";
+        IdentitiesOnly = true;
+        AddKeysToAgent = "yes";
       };
 
-      # Optional alias block if you want "codeberg" as a shortcut
       "codeberg" = {
-        hostname = "codeberg.org";
-        user = "git";
-        identityFile = "~/.ssh/id_ed25519_codeberg";
-        identitiesOnly = true;
-        addKeysToAgent = "yes";
-      };
-
-      "*" = {
-        forwardAgent = false;
-
-        serverAliveInterval = 60;
-        serverAliveCountMax = 3;
-
-        compression = false;
-
-        addKeysToAgent = "yes";
-
-        hashKnownHosts = true;
-        userKnownHostsFile = "~/.ssh/known_hosts";
-
-        controlMaster = "no";
-        controlPath = "~/.ssh/master-%r@%n:%p";
-        controlPersist = "no";
+        HostName = "codeberg.org";
+        User = "git";
+        IdentityFile = "~/.ssh/id_ed25519_codeberg";
+        IdentitiesOnly = true;
+        AddKeysToAgent = "yes";
       };
     };
   };
