@@ -234,6 +234,7 @@ in {
           # Open Rofi's desktop-application launcher with Super/Windows + R.
           "${mod}+r" = "exec ${launcher}";
           "${mod}+f" = "exec ${browser}";
+          "${mod}+o" = "exec ${lib.getExe pkgs.nwg-displays}";
 
           "${mod}+q" = "kill";
           "${mod}+Shift+c" = "reload";
@@ -309,6 +310,11 @@ in {
       for_window [window_role="task_dialog"] floating enable
       for_window [window_type="dialog"] floating enable
       for_window [window_type="menu"] floating enable
+
+      # Written by nwg-displays. These remain ordinary writable files beside
+      # the Home Manager-managed main config, so no manual editing is needed.
+      include ~/.config/sway/outputs
+      include ~/.config/sway/workspaces
     '';
   };
 
@@ -319,6 +325,7 @@ in {
       grim
       i3status-rust
       libnotify
+      nwg-displays
       pamixer
       playerctl
       slurp

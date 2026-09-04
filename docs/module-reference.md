@@ -128,6 +128,12 @@ and `CLUTTER_BACKEND`.
 The Home Manager output configuration explicitly selects a solid color, so
 Sway never uses its packaged default wallpaper.
 
+`Super+O` opens `nwg-displays`. Its graphical layout uses Sway's output
+management protocol and saves the resulting output positions and workspace
+assignments to writable include files under `~/.config/sway/`. Adjacent output
+positions define where the pointer crosses between monitors; scaling is
+accounted for by the generated Sway output commands.
+
 The pinned Sway 1.12 build no longer exposes the former `--unsupported-gpu`
 option. NVIDIA support is therefore kept in the NixOS graphics module instead
 of relying on undocumented Sway environment variables.

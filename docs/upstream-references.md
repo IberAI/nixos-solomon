@@ -53,6 +53,7 @@ Two pages answer most day-to-day questions:
 | i3status-rust | <https://greshake.github.io/i3status-rust/i3status_rs/> |
 | mako notifications | <https://github.com/emersion/mako> |
 | Rofi launcher | <https://github.com/davatorium/rofi> |
+| nwg-displays output manager | <https://github.com/nwg-piotr/nwg-displays> |
 | swaylock | <https://github.com/swaywm/swaylock> |
 | grim screenshots | <https://github.com/emersion/grim> |
 | slurp region select | <https://github.com/emersion/slurp> |
