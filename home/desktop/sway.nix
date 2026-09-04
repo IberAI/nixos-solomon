@@ -234,7 +234,7 @@ in {
           # Open Rofi's desktop-application launcher with Super/Windows + R.
           "${mod}+r" = "exec ${launcher}";
           "${mod}+f" = "exec ${browser}";
-          "${mod}+o" = "exec ${lib.getExe pkgs.nwg-displays}";
+          "${mod}+o" = "exec ${lib.getExe pkgs.nwg-displays} --num_ws 7";
 
           "${mod}+q" = "kill";
           "${mod}+Shift+c" = "reload";

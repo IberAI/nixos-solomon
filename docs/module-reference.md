@@ -132,7 +132,8 @@ Sway never uses its packaged default wallpaper.
 management protocol and saves the resulting output positions and workspace
 assignments to writable include files under `~/.config/sway/`. Adjacent output
 positions define where the pointer crosses between monitors; scaling is
-accounted for by the generated Sway output commands.
+accounted for by the generated Sway output commands. The launcher passes
+`--num_ws 7` to match the seven workspaces declared by this configuration.
 
 The pinned Sway 1.12 build no longer exposes the former `--unsupported-gpu`
 option. NVIDIA support is therefore kept in the NixOS graphics module instead

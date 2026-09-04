@@ -123,7 +123,8 @@ The native profile enables:
   `i3status-rust`, Mako, Rofi, `nwg-displays`, Swaylock, Swayidle, Grim/Slurp
   screenshots, Wayland clipboard support, XWayland for X11-only clients, and
   a `greetd`/`tuigreet` login. Press `Super+O` to arrange multiple displays;
-  applying the layout saves it for future Sway sessions.
+  applying the layout saves it and the seven-workspace assignment for future
+  Sway sessions.
 - I2P through `i2pd`, configured as a client-oriented local service with
   localhost-only HTTP proxy, SOCKS proxy, SAM, I2CP, and web console endpoints.
 - OBS Studio for recording and streaming, with wlroots/PipeWire capture support,
