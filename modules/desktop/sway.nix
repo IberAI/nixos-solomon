@@ -29,15 +29,22 @@
           exit 1
         fi
 
-        exec ${lib.getExe config.programs.sway.package} --config "$config"
+        exec ${lib.getExe config.programs.sway.package} --unsupported-gpu --config "$config"
       '';
     };
 
     services.greetd = {
       enable = true;
+
       settings = {
         default_session = {
-          command = "${lib.getExe pkgs.tuigreet} --time --remember --cmd /etc/sway/solomon-session";
+          command = "${lib.getExe pkgs.tuigreet} \
+        --time \
+        --remember \
+        --remember-user-session \
+        --asterisks \
+        --cmd /etc/sway/solomon-session";
+
           user = "greeter";
         };
       };
@@ -58,6 +65,7 @@
       # BROWSER and the MOZ_* pair in home/apps/browsers.nix, EDITOR/VISUAL in
       # home/dev/nvchad.nix.
       sessionVariables = {
+        SWAY_UNSUPPORTED_GPI = true;
         NIXOS_OZONE_WL = "1";
         QT_QPA_PLATFORM = "wayland;xcb";
         SDL_VIDEODRIVER = "wayland";
