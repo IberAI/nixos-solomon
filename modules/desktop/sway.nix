@@ -65,7 +65,7 @@
       # BROWSER and the MOZ_* pair in home/apps/browsers.nix, EDITOR/VISUAL in
       # home/dev/nvchad.nix.
       sessionVariables = {
-        SWAY_UNSUPPORTED_GPI = true;
+        SWAY_UNSUPPORTED_GPU = "1";
         NIXOS_OZONE_WL = "1";
         QT_QPA_PLATFORM = "wayland;xcb";
         SDL_VIDEODRIVER = "wayland";
