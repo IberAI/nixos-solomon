@@ -133,7 +133,7 @@ in {
         };
 
       # Override Sway's packaged wallpaper with a plain declarative background.
-      output."*".bg = "#1e1e2e solid_color";
+      output."*".bg = "#1a1b26 solid_color";
 
       workspaceAutoBackAndForth = true;
       workspaceLayout = "default";
