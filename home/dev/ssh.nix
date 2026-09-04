@@ -13,25 +13,39 @@
       profile.privateIncludes.ssh
     ];
 
-    settings = {
+    matchBlocks = {
       "github.com" = {
-        IdentitiesOnly = true;
-        User = "git";
-        HostName = "github.com";
-        IdentityFile = "~/.ssh/id_ed25519_github";
+        hostname = "github.com";
+        user = "git";
+        identityFile = "~/.ssh/id_ed25519_github";
+        identitiesOnly = true;
+        addKeysToAgent = true;
+      };
+
+      "codeberg.org codeberg" = {
+        hostname = "codeberg.org";
+        user = "git";
+        identityFile = "~/.ssh/id_ed25519_codeberg";
+        identitiesOnly = true;
+        addKeysToAgent = true;
       };
 
       "*" = {
-        ForwardAgent = false;
-        ServerAliveInterval = 60;
-        ServerAliveCountMax = 3;
-        Compression = false;
-        AddKeysToAgent = true;
-        HashKnownHosts = true;
-        UserKnownHostsFile = "~/.ssh/known_hosts";
-        ControlMaster = "no";
-        ControlPath = "~/.ssh/master-%r@%n:%p";
-        ControlPersist = "no";
+        forwardAgent = false;
+
+        serverAliveInterval = 60;
+        serverAliveCountMax = 3;
+
+        compression = false;
+
+        addKeysToAgent = true;
+
+        hashKnownHosts = true;
+        userKnownHostsFile = "~/.ssh/known_hosts";
+
+        controlMaster = "no";
+        controlPath = "~/.ssh/master-%r@%n:%p";
+        controlPersist = "no";
       };
     };
   };
