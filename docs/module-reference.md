@@ -115,16 +115,26 @@ require `open = true`.
 
 ### `modules/desktop/sway.nix` — `solomon.desktop.sway.enable`
 
-**Owns the sway binary.** Home Manager owns the config file. Splitting it this
-way means exactly one sway is on `PATH` and exactly one place wraps it.
+**Owns the login Sway binary.** Home Manager owns and validates the config
+file. Greetd runs `/etc/sway/solomon-session`, which checks that the managed
+config exists and passes it to Sway with `--config`; it cannot fall back to an
+unrelated system config.
 
-Also sets up `greetd` + `tuigreet` (pointed at an absolute sway path, not a bare
-name), registers the fonts, and declares the session-wide display-server
+Also sets up the only automatic startup path through `greetd` + `tuigreet`,
+registers the fonts, and declares the session-wide display-server
 variables — `NIXOS_OZONE_WL`, `QT_QPA_PLATFORM`, `SDL_VIDEODRIVER`,
-`CLUTTER_BACKEND`, plus `SWAY_UNSUPPORTED_GPU` when NVIDIA is on.
+and `CLUTTER_BACKEND`.
 
-sway 1.12 no longer refuses to start on proprietary NVIDIA; it raises a
-`swaynag`, which `SWAY_UNSUPPORTED_GPU` acknowledges once.
+The Home Manager output configuration explicitly selects a solid color, so
+Sway never uses its packaged default wallpaper.
+
+The pinned Sway 1.12 build no longer exposes the former `--unsupported-gpu`
+option. NVIDIA support is therefore kept in the NixOS graphics module instead
+of relying on undocumented Sway environment variables.
+
+Home Manager's Sway systemd integration derives its D-Bus implementation from
+the evaluated NixOS setting. This keeps its activation command compatible with
+the system's `dbus-broker` configuration.
 
 Enabling `programs.sway` also implicitly provides `security.polkit`,
 `security.pam.services.swaylock`, `xdg.portal.wlr`, the GTK portal, and the
@@ -234,14 +244,14 @@ The sway **configuration**: keybindings, workspaces, colours, gaps, floating
 rules, the `i3status-rust` bar, startup programs, and the keyboard `input`
 block.
 
-`package = null` on purpose — the NixOS module installs sway. Consequences:
-`checkConfig` must be off (upstream asserts `checkConfig -> package != null`),
-and `extraOptions`/`extraSessionCommands` become inert, which is why the
-launch flags and exports live in `modules/desktop/sway.nix` instead.
+Home Manager uses the unwrapped `pkgs.sway` to validate the generated config at
+build time and reload it after activation. The NixOS-managed wrapper remains
+the compositor used at login. Its explicit `--config` argument points to the
+Home Manager-owned file, so both halves use the same checked configuration.
 
 - [`sway(5)`](https://man.archlinux.org/man/sway.5)
 - [i3status-rust documentation](https://greshake.github.io/i3status-rust/i3status_rs/)
-- [fuzzel](https://codeberg.org/dnkl/fuzzel) · [swaylock](https://github.com/swaywm/swaylock) ·
+- [Rofi](https://github.com/davatorium/rofi) · [swaylock](https://github.com/swaywm/swaylock) ·
   [grim](https://github.com/emersion/grim) · [slurp](https://github.com/emersion/slurp)
 
 ### `home/desktop/notifications.nix`

@@ -120,7 +120,7 @@ The native profile enables:
 - Removable media automounting through the Home Manager `udiskie` user service
   backed by the system `udisks2` service.
 - Sway as the native Wayland desktop, with i3-style keybindings,
-  `i3status-rust`, Mako, Fuzzel, Swaylock, Swayidle, Grim/Slurp screenshots,
+  `i3status-rust`, Mako, Rofi, Swaylock, Swayidle, Grim/Slurp screenshots,
   Wayland clipboard support, XWayland for X11-only clients, and a
   `greetd`/`tuigreet` login.
 - I2P through `i2pd`, configured as a client-oriented local service with
@@ -131,10 +131,10 @@ The native profile enables:
 - GPU Screen Recorder for low-overhead GPU-encoded capture, instant replay, and
   one-command live streaming. See [Streaming](#streaming).
 
-Sway 1.12 no longer refuses to start on the proprietary NVIDIA driver; it raises
-a `swaynag` instead. The Sway module sets `SWAY_UNSUPPORTED_GPU=true` whenever
-`solomon.hardware.nvidia.enable` is on, so that prompt does not appear at every
-login.
+The pinned Sway 1.12 build accepts NVIDIA without the former
+`--unsupported-gpu` option. No undocumented NVIDIA-specific Sway environment
+variables are set; driver support is configured through the NixOS NVIDIA and
+graphics modules.
 
 For an RTX 5080, keep the NVIDIA driver on a current production/new-feature
 branch. If the production branch in your locked Nixpkgs revision is too old for
@@ -225,9 +225,14 @@ These are intentionally manual:
 ```sh
 nix fmt
 nix flake check
+just update
+just update-switch
 sudo nixos-rebuild test --flake .#nixos
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
-The config is structured so checks/builds are easy to run, but they are not run
-automatically by the repository.
+`just update` refreshes every flake input and completes all checks plus a full
+system build without activating it. Review the resulting `flake.lock` change,
+then use `just update-switch` when you want the same pipeline followed by
+activation. The desktop uses an explicit solid-color Sway background rather
+than the packaged default wallpaper.

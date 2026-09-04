@@ -52,7 +52,7 @@ Two pages answer most day-to-day questions:
 | Greetd on NixOS | <https://wiki.nixos.org/wiki/Greetd> |
 | i3status-rust | <https://greshake.github.io/i3status-rust/i3status_rs/> |
 | mako notifications | <https://github.com/emersion/mako> |
-| fuzzel launcher | <https://codeberg.org/dnkl/fuzzel> |
+| Rofi launcher | <https://github.com/davatorium/rofi> |
 | swaylock | <https://github.com/swaywm/swaylock> |
 | grim screenshots | <https://github.com/emersion/grim> |
 | slurp region select | <https://github.com/emersion/slurp> |

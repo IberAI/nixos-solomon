@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  osConfig,
   pkgs,
   profile,
   ...
@@ -10,6 +11,7 @@
 
   terminal = lib.getExe pkgs.${profile.desktop.terminal};
   browser = lib.getExe pkgs.${profile.desktop.browser};
+  launcher = "${lib.getExe pkgs.rofi} -show drun";
   statusConfig = "${config.xdg.configHome}/i3status-rust/config-top.toml";
 
   lockScreen = pkgs.writeShellApplication {
@@ -35,9 +37,7 @@
       mkdir -p "$dir"
 
       file="$dir/screenshot-$(date +%Y-%m-%d-%H%M%S).png"
-      selection="$(slurp)"
-
-      if [ -z "$selection" ]; then
+      if ! selection="$(slurp)" || [ -z "$selection" ]; then
         exit 0
       fi
 
@@ -57,30 +57,24 @@ in {
   wayland.systemd.target = "sway-session.target";
 
   wayland.windowManager.sway = {
-    # null means "the NixOS programs.sway module installs sway; this module
-    # only writes the config file". Without it both modules put a differently
-    # wrapped sway on PATH and which one greetd launches is down to PATH order.
-    #
-    # Consequences of package = null, all of them intended here:
-    #   - checkConfig must be off (upstream asserts checkConfig -> package
-    #     != null), so the config is no longer validated at build time
-    #   - extraOptions and extraSessionCommands become inert, because there is
-    #     no wrapper left to put them in
-    #
-    # --unsupported-gpu is therefore replaced by SWAY_UNSUPPORTED_GPU and the
-    # exported variables by environment.sessionVariables, both in
-    # modules/desktop/sway.nix. Those reach the session through pam_env, which
-    # does not depend on how sway was launched.
+    # Use the unwrapped package here to validate the generated config and to
+    # reload it after Home Manager activation. The login compositor remains
+    # the NixOS-managed wrapper and is launched with this config explicitly by
+    # /etc/sway/solomon-session.
     enable = true;
-    package = null;
-    checkConfig = false;
+    package = pkgs.sway;
+    checkConfig = true;
     xwayland = true;
-    systemd.enable = true;
+    systemd = {
+      enable = true;
+      # Home Manager requires this to match the NixOS D-Bus implementation.
+      dbusImplementation = osConfig.services.dbus.implementation;
+    };
 
     config = {
       modifier = mod;
       inherit terminal;
-      menu = "${lib.getExe pkgs.fuzzel}";
+      menu = launcher;
 
       fonts = {
         names = [
@@ -137,6 +131,9 @@ in {
         // lib.optionalAttrs (profile.keyboard.options != []) {
           xkb_options = lib.concatStringsSep "," profile.keyboard.options;
         };
+
+      # Override Sway's packaged wallpaper with a plain declarative background.
+      output."*".bg = "#1e1e2e solid_color";
 
       workspaceAutoBackAndForth = true;
       workspaceLayout = "default";
@@ -220,14 +217,8 @@ in {
           command = "${pkgs.swayidle}/bin/swayidle -w timeout 600 '${lib.getExe lockScreen}' before-sleep '${lib.getExe lockScreen}'";
           always = false;
         }
-        {
-          command = "${lib.getExe pkgs.mako}";
-          always = false;
-        }
-        # The tray applet is not started here: programs.nm-applet.enable in
-        # modules/programs.nix already runs it as a user service bound to
-        # graphical-session.target, and starting it from both places gives two
-        # icons in the tray.
+        # Mako is D-Bus activated and nm-applet is a systemd user service, so
+        # neither should also be started here.
       ];
 
       keybindings = lib.mkForce (
@@ -240,13 +231,14 @@ in {
         // mkWorkspaceBindings 7
         // {
           "${mod}+t" = "exec ${terminal}";
-          "${mod}+r" = "exec ${lib.getExe pkgs.fuzzel}";
+          # Open Rofi's desktop-application launcher with Super/Windows + R.
+          "${mod}+r" = "exec ${launcher}";
           "${mod}+f" = "exec ${browser}";
 
           "${mod}+q" = "kill";
           "${mod}+Shift+c" = "reload";
           "${mod}+Shift+r" = "reload";
-          "${mod}+Shift+e" = "exec swaymsg exit";
+          "${mod}+Shift+e" = "exec ${pkgs.sway}/bin/swaymsg exit";
 
           "${mod}+l" = "exec ${lib.getExe lockScreen}";
           "${mod}+p" = "exec ${lib.getExe screenshotRegion}";
@@ -323,7 +315,7 @@ in {
   home = {
     packages = with pkgs; [
       brightnessctl
-      fuzzel
+      rofi
       grim
       i3status-rust
       libnotify
