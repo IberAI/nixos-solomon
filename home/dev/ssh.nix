@@ -22,7 +22,16 @@
         addKeysToAgent = "yes";
       };
 
-      "codeberg.org codeberg" = {
+      "codeberg.org" = {
+        hostname = "codeberg.org";
+        user = "git";
+        identityFile = "~/.ssh/id_ed25519_codeberg";
+        identitiesOnly = true;
+        addKeysToAgent = "yes";
+      };
+
+      # Optional alias block if you want "codeberg" as a shortcut
+      "codeberg" = {
         hostname = "codeberg.org";
         user = "git";
         identityFile = "~/.ssh/id_ed25519_codeberg";
