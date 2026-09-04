@@ -19,7 +19,7 @@
         user = "git";
         identityFile = "~/.ssh/id_ed25519_github";
         identitiesOnly = true;
-        addKeysToAgent = true;
+        addKeysToAgent = "yes";
       };
 
       "codeberg.org codeberg" = {
@@ -27,7 +27,7 @@
         user = "git";
         identityFile = "~/.ssh/id_ed25519_codeberg";
         identitiesOnly = true;
-        addKeysToAgent = true;
+        addKeysToAgent = "yes";
       };
 
       "*" = {
@@ -38,7 +38,7 @@
 
         compression = false;
 
-        addKeysToAgent = true;
+        addKeysToAgent = "yes";
 
         hashKnownHosts = true;
         userKnownHostsFile = "~/.ssh/known_hosts";
