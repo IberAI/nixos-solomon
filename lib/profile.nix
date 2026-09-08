@@ -6,7 +6,7 @@ rec {
   homeDirectory = "/home/${username}";
 
   locale = {
-    timeZone = "Asia/Jerusalem";
+    timeZone = "America/NewYork";
     default = "en_US.UTF-8";
   };
 
