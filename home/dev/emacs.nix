@@ -6,6 +6,7 @@
 
   home.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
+    pkgs.emacsPackages.vterm
   ];
 
   home.file.".emacs.d/init.el".text = ''
@@ -73,6 +74,11 @@
     ;; Better cursor for coding.
     (setq-default cursor-type 'bar)
 
+    ;; Fish Shell configuration vterm
+    (setq vterm-shell "fish")
+    (require 'vterm)
+    (setq vterm-shell "fish")
+
     ;; Startup buffer
     (setq initial-buffer-choice
           (lambda ()
@@ -105,7 +111,6 @@
       (add-hook hook
                 (lambda ()
                   (display-line-numbers-mode 0))))
-
     ;; Custom file
     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
     (when (file-exists-p custom-file)
