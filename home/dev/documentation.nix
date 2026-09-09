@@ -31,7 +31,7 @@
 
     # Linux syscall and C library man pages.
     man-pages
-
+    linux-manual
     # POSIX command/libc/header man pages.
     man-pages-posix
 
