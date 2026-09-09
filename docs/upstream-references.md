@@ -26,6 +26,11 @@ Two pages answer most day-to-day questions:
 | Home Manager options | <https://nix-community.github.io/home-manager/options.xhtml> |
 | Home Manager source | <https://github.com/nix-community/home-manager> |
 | Home Manager (wiki) | <https://wiki.nixos.org/wiki/Home_Manager> |
+| Lanzaboote | <https://nix-community.github.io/lanzaboote/> |
+| systemd-boot | <https://systemd.io/BOOT/> |
+| UEFI Secure Boot specification | <https://uefi.org/specs/UEFI/2.10/32_Secure_Boot_and_Driver_Signing.html> |
+| Microsoft Secure Boot and Trusted Boot | <https://learn.microsoft.com/en-us/windows/security/operating-system-security/system-security/trusted-boot> |
+| Microsoft BitLocker configuration | <https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/configure> |
 
 ## Nix tooling
 

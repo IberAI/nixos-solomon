@@ -99,6 +99,11 @@ A NixOS host flake should keep inputs explicit and outputs boring:
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.1.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ { nixpkgs, home-manager, ... }: {
@@ -124,6 +129,9 @@ Keep these rules:
   `home-manager/release-26.05`.
 - Use `inputs.<name>.inputs.nixpkgs.follows = "nixpkgs"` when a flake should
   share the same pinned Nixpkgs revision.
+- Pin Lanzaboote to a release tag and import its module unconditionally. This
+  repository enables it by default through `solomon.boot.secureBoot.enable`, but
+  the option remains overrideable for unsigned recovery boots.
 - Pass only stable cross-module facts through `specialArgs`, such as `inputs`,
   `profile`, and `system`.
 - Put real NixOS options in modules, not in `specialArgs`.
@@ -222,6 +230,18 @@ just switch
 
 Use `test` before `switch` when changing desktop, networking, user services, or
 Home Manager activation. Use `build` for a non-activating compile check.
+
+For Secure Boot changes, use the repository guide before switching the firmware
+into enforcing mode:
+
+```sh
+sudo bootctl status
+nix shell nixpkgs#sbctl
+sudo sbctl create-keys
+nix flake check
+sudo nixos-rebuild test --flake .#nixos
+sudo sbctl verify
+```
 
 ## Updating Inputs
 
@@ -351,5 +371,8 @@ home-manager.extraSpecialArgs = {
 - Nixpkgs manual, stable: https://nixos.org/manual/nixpkgs/stable/
 - Home Manager flakes: https://nix-community.github.io/home-manager/nix-flakes.html
 - Home Manager NixOS module: https://nix-community.github.io/home-manager/installation/nixos.html
+- Lanzaboote: https://nix-community.github.io/lanzaboote/
+- systemd-boot: https://systemd.io/BOOT/
+- UEFI Secure Boot: https://uefi.org/specs/UEFI/2.10/32_Secure_Boot_and_Driver_Signing.html
 - NixOS option search: https://search.nixos.org/options
 - i2pd upstream documentation: https://i2pd.readthedocs.io/

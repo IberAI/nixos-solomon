@@ -102,9 +102,9 @@ and [the bug that added the opt-out](https://bugzilla.mozilla.org/show_bug.cgi?i
 ~/.emacs.d/                     everything EXCEPT init.el, see §5
 ```
 
-Then the remaining data: `~/Documents`, `~/Pictures`, `~/Tools` — `~/Development`
-is covered in §2a. The Home Manager activation script recreates those
-directories, but never their contents.
+Then the remaining data: `~/Documents`, `~/Media`, `~/Tools` — `~/Development`
+is covered in §2a and includes `~/Development/Projects`. The Home Manager
+activation script recreates those directories, but never their contents.
 
 ## 4. System state — needs `sudo`
 
@@ -112,12 +112,17 @@ directories, but never their contents.
 /etc/NetworkManager/system-connections/   every saved Wi-Fi password
 /var/lib/bluetooth/                       device pairings
 /var/lib/i2pd/                            router identity and netDb (optional)
+/var/lib/sbctl/                           Secure Boot signing keys, only for the same machine
 /var/lib/tor/                             optional, regenerates
 /var/lib/docker/                          images and volumes; large, or re-pull
 ```
 
 The NetworkManager directory is the one most often forgotten, and losing it
 means no network on the new machine.
+
+Only copy `/var/lib/sbctl` when migrating the same Secure Boot trust setup to the
+same machine or intentionally preserving the same local signing authority. Do not
+commit it, and do not copy it casually to unrelated hardware.
 
 ## 5. Do not copy — Home Manager will refuse to activate
 
@@ -182,6 +187,8 @@ Delete it and re-run.
 
 - Confirm the keyboard is Turkish at the `tuigreet` prompt. If not,
   `console.keyMap` did not apply — check `modules/locale.nix`.
+- If `solomon.boot.secureBoot.enable = true`, confirm `bootctl status` reports
+  Secure Boot enabled in user mode and run `sudo sbctl verify`.
 - Re-pair Bluetooth devices if `/var/lib/bluetooth` was not copied.
 - Create stream keys as needed:
 

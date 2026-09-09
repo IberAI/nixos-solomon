@@ -44,9 +44,16 @@ Enables the `nix-command` and `flakes` experimental features, weekly GC with a
 
 ### `modules/boot.nix`
 
-`systemd-boot` with 10 retained generations and EFI variable access.
+Secure Boot through Lanzaboote by default. When
+`solomon.boot.secureBoot.enable` is true, the module disables regular
+`systemd-boot` with `lib.mkForce false`, enables Lanzaboote, points it at
+`/var/lib/sbctl`, and installs `sbctl` for verification and recovery. Override
+the option to `false` for unsigned `systemd-boot` with 10 retained generations
+and EFI variable access.
 
 - [NixOS bootloader options](https://search.nixos.org/options?query=boot.loader.systemd-boot)
+- [Lanzaboote](https://nix-community.github.io/lanzaboote/)
+- [Secure Boot guide](secure-boot.md)
 
 ### `modules/locale.nix`
 
@@ -81,6 +88,7 @@ NTCP2/SSU2, 256 KB/s, localhost-only HTTP proxy, SOCKS, SAM, I2CP and console.
 
 - [i2pd documentation](https://i2pd.readthedocs.io/en/latest/)
 - [i2pd source](https://github.com/PurpleI2P/i2pd)
+- [Repository i2pd guide](networking-i2pd.md)
 
 ### `modules/audio.nix`
 
@@ -230,8 +238,11 @@ and `inputs`/`profile` passed through `extraSpecialArgs`.
 
 ### `home.nix`
 
-`stateVersion`, XDG user directories (including `SCREENSHOTS`, `DEVELOPMENT`,
-`TOOLS`), the base-directory activation script, and `sessionPath`.
+`stateVersion`, XDG user directories (including `MEDIA`, `PROJECTS`,
+`SCREENSHOTS`, `DEVELOPMENT`, `TOOLS`), the base-directory activation script,
+and `sessionPath`. `PROJECTS` is intentionally under `~/Development/Projects`;
+music, pictures, screenshots, and videos are intentionally under `~/Media`, not
+directly under `~`.
 
 ### `home/desktop/sway.nix`
 

@@ -31,6 +31,11 @@ hardware configuration is intentionally left for the target machine.
   fresh install, and which paths Home Manager refuses to activate over.
 - [NixOS 26.05 Flakes and Home Manager Guide](docs/nixos-flakes-home-manager-26.05.md)
   — the flake workflow, state versions, updating inputs, and debugging.
+- [Secure Boot With Lanzaboote](docs/secure-boot.md) — how this repository uses
+  signed boot by default and can be overridden to unsigned systemd-boot when
+  needed.
+- [I2P With i2pd](docs/networking-i2pd.md) — local proxy endpoints, service
+  checks, and when not to open inbound I2P ports.
 
 Two catalogues answer most questions not covered above:
 
@@ -133,6 +138,13 @@ The native profile enables:
 - GPU Screen Recorder for low-overhead GPU-encoded capture, instant replay, and
   one-command live streaming. See [Streaming](#streaming).
 
+Secure Boot is enabled by default through Lanzaboote and expects local `sbctl`
+keys in `/var/lib/sbctl`. Read
+[Secure Boot With Lanzaboote](docs/secure-boot.md) before switching firmware
+enforcement on. Create keys with `sudo sbctl create-keys` before rebuilding this
+default mode. Override `solomon.boot.secureBoot.enable = false` only for unsigned
+recovery or machines that have not been provisioned yet.
+
 The pinned Sway 1.12 build accepts NVIDIA without the former
 `--unsupported-gpu` option. No undocumented NVIDIA-specific Sway environment
 variables are set; driver support is configured through the NixOS NVIDIA and
@@ -205,7 +217,8 @@ on every launch.
 ## I2P
 
 The native profile enables `services.i2pd` through
-`solomon.networking.i2p.enable`.
+`solomon.networking.i2p.enable`. See [I2P With i2pd](docs/networking-i2pd.md)
+for browser proxy setup, service checks, state paths, and operating-mode notes.
 
 Local endpoints:
 

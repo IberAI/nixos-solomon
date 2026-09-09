@@ -1,7 +1,10 @@
-_: {
+{lib, ...}: {
   solomon = {
     user.enable = true;
     home.enable = true;
+
+    # Requires target-machine keys in /var/lib/sbctl. See docs/secure-boot.md.
+    boot.secureBoot.enable = lib.mkDefault true;
 
     desktop.sway.enable = true;
 

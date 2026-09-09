@@ -1,5 +1,8 @@
 mkdir -p "$HOME/Development"
+mkdir -p "$HOME/Development/Projects"
 mkdir -p "$HOME/Tools"
 mkdir -p "$HOME/Documents"
 mkdir -p "$HOME/Downloads"
+mkdir -p "$HOME/Media/Music"
 mkdir -p "$HOME/Media/Pictures/ScreenShots"
+mkdir -p "$HOME/Media/Videos"

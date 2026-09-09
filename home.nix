@@ -40,11 +40,13 @@
       download = "${profile.homeDirectory}/Downloads";
       music = "${profile.homeDirectory}/Media/Music";
       pictures = "${profile.homeDirectory}/Media/Pictures";
+      projects = "${profile.homeDirectory}/Development/Projects";
       publicShare = "${profile.homeDirectory}/Public";
       templates = "${profile.homeDirectory}/Templates";
       videos = "${profile.homeDirectory}/Media/Videos";
 
       extraConfig = {
+        MEDIA = "${profile.homeDirectory}/Media";
         SCREENSHOTS = "${profile.homeDirectory}/Media/Pictures/ScreenShots";
         DEVELOPMENT = "${profile.homeDirectory}/Development";
         TOOLS = "${profile.homeDirectory}/Tools";

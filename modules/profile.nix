@@ -4,6 +4,20 @@
 
     home.enable = lib.mkEnableOption "Home Manager for the primary user";
 
+    boot.secureBoot = {
+      enable = lib.mkEnableOption "Secure Boot for NixOS through Lanzaboote";
+
+      pkiBundle = lib.mkOption {
+        type = lib.types.str;
+        default = "/var/lib/sbctl";
+        description = ''
+          Directory containing the Secure Boot keys managed by sbctl. Generate
+          it on the target machine with `sudo sbctl create-keys`; do not commit
+          the private keys to this repository.
+        '';
+      };
+    };
+
     desktop.sway.enable = lib.mkEnableOption "the Sway Wayland desktop";
 
     hardware = {
