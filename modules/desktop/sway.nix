@@ -56,6 +56,8 @@
       };
     };
 
+    systemd.services.greetd.serviceConfig.Type = "idle";
+
     # security.pam.services.swaylock is already declared by the upstream sway
     # module (wayland-session.nix), so it is not repeated here.
 

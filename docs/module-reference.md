@@ -130,9 +130,10 @@ unrelated system config.
 
 Also sets up the only automatic startup path through `greetd` + `tuigreet`,
 runs the greeter on VT 7 so boot messages remain visible on the boot console
-without overwriting the prompt, registers the fonts, and declares the
-session-wide display-server variables — `NIXOS_OZONE_WL`, `QT_QPA_PLATFORM`,
-`SDL_VIDEODRIVER`, and `CLUTTER_BACKEND`.
+without overwriting the prompt, and starts `greetd.service` as `Type=idle` so
+systemd waits for active startup jobs to finish before painting the TUI. It also
+registers the fonts and declares the session-wide display-server variables —
+`NIXOS_OZONE_WL`, `QT_QPA_PLATFORM`, `SDL_VIDEODRIVER`, and `CLUTTER_BACKEND`.
 
 The Home Manager output configuration explicitly selects a solid color, so
 Sway never uses its packaged default wallpaper.
