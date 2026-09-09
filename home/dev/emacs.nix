@@ -2,11 +2,13 @@
   programs.emacs = {
     enable = true;
     package = pkgs.emacs-gtk;
+    extraPackages = epkgs: [
+      epkgs.vterm
+    ];
   };
 
   home.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
-    pkgs.emacsPackages.vterm
   ];
 
   home.file.".emacs.d/init.el".text = ''
@@ -74,10 +76,8 @@
     ;; Better cursor for coding.
     (setq-default cursor-type 'bar)
 
-    ;; Fish Shell configuration vterm
-    (setq vterm-shell "fish")
+    ;; Terminal emulator
     (require 'vterm)
-    (setq vterm-shell "fish")
 
     ;; Startup buffer
     (setq initial-buffer-choice
