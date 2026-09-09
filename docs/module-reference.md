@@ -129,9 +129,10 @@ config exists and passes it to Sway with `--config`; it cannot fall back to an
 unrelated system config.
 
 Also sets up the only automatic startup path through `greetd` + `tuigreet`,
-registers the fonts, and declares the session-wide display-server
-variables — `NIXOS_OZONE_WL`, `QT_QPA_PLATFORM`, `SDL_VIDEODRIVER`,
-and `CLUTTER_BACKEND`.
+runs the greeter on VT 7 so boot messages remain visible on the boot console
+without overwriting the prompt, registers the fonts, and declares the
+session-wide display-server variables — `NIXOS_OZONE_WL`, `QT_QPA_PLATFORM`,
+`SDL_VIDEODRIVER`, and `CLUTTER_BACKEND`.
 
 The Home Manager output configuration explicitly selects a solid color, so
 Sway never uses its packaged default wallpaper.

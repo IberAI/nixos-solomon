@@ -37,9 +37,15 @@
       enable = true;
 
       settings = {
+        terminal = {
+          vt = lib.mkForce 7;
+        };
+
         default_session = {
           command = "${lib.getExe pkgs.tuigreet} \
+        --greeting Solomon \
         --time \
+        --width 72 \
         --remember \
         --remember-user-session \
         --asterisks \

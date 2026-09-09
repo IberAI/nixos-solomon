@@ -127,9 +127,9 @@ The native profile enables:
 - Sway as the native Wayland desktop, with i3-style keybindings,
   `i3status-rust`, Mako, Rofi, `nwg-displays`, Swaylock, Swayidle, Grim/Slurp
   screenshots, Wayland clipboard support, XWayland for X11-only clients, and
-  a `greetd`/`tuigreet` login. Press `Super+O` to arrange multiple displays;
-  applying the layout saves it and the seven-workspace assignment for future
-  Sway sessions.
+  a `greetd`/`tuigreet` login on VT 7. Press `Super+O` to arrange multiple
+  displays; applying the layout saves it and the seven-workspace assignment for
+  future Sway sessions.
 - I2P through `i2pd`, configured as a client-oriented local service with
   localhost-only HTTP proxy, SOCKS proxy, SAM, I2CP, and web console endpoints.
 - OBS Studio for recording and streaming, with wlroots/PipeWire capture support,
