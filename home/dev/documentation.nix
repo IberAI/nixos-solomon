@@ -23,7 +23,7 @@
   #
   # is a NixOS system option, not a Home Manager option.
   # Put that in configuration.nix if rebuilds are slow from man-cache.
-
+  programs.man.generateCaches = false;
   home.packages = with pkgs; [
     ########################################
     # C / POSIX / Linux documentation sets

@@ -4,6 +4,7 @@
   ];
 
   home.packages = with pkgs; [
+    newsboat
     mpv
     yt-dlp
   ];
