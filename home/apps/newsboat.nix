@@ -55,8 +55,8 @@
     queries = {};
 
     extraConfig = ''
-      # Press 'p' to play the current item's first media enclosure with mpv.
-      macro p set browser "${pkgs.mpv}/bin/mpv --player-operation-mode=pseudo-gui -- %u &"; one; set browser "$BROWSER"
+      # Play the current article with mpv.
+      macro p set browser "${pkgs.mpv}/bin/mpv --player-operation-mode=pseudo-gui -- %u &"; open; set browser "$BROWSER"
     '';
   };
 }
