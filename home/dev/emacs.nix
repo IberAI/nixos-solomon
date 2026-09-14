@@ -4,6 +4,8 @@
     package = pkgs.emacs-gtk;
     extraPackages = epkgs: [
       epkgs.vterm
+      epkgs.nix-mode
+      epkgs.nixfmt
     ];
   };
 
@@ -87,7 +89,6 @@
                (if (file-directory-p dev-dir)
                    dev-dir
                  "~")))))
-
     ;; C / C++
     (setq c-default-style "linux")
     (setq c-basic-offset 4)
@@ -115,7 +116,6 @@
     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
     (when (file-exists-p custom-file)
       (load custom-file))
-
     ;;; init.el ends here
   '';
 }
