@@ -7,5 +7,6 @@ _: {
     ./security.nix
     ./scientific.nix
     ./messaging/default.nix
+    ./discord.nix
   ];
 }
