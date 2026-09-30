@@ -98,7 +98,6 @@
       mkShell = name: packages:
         pkgs.mkShell {
           inherit packages;
-
           shellHook = ''
             export PROJECT_NAME="${name}"
             export NIXPKGS_ALLOW_UNFREE=1
@@ -110,9 +109,11 @@
             if command -v nvcc >/dev/null 2>&1; then
               export CUDA_PATH="${pkgs.cudaPackages.cudatoolkit}"
               export CUDA_HOME="$CUDA_PATH"
+
               export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [
               pkgs.cudaPackages.cudatoolkit
               pkgs.cudaPackages.cuda_cudart
+              pkgs.linuxPackages.nvidiaPackages.stable
             ]}:''${LD_LIBRARY_PATH:-}"
             fi
 
