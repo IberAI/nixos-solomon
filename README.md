@@ -36,6 +36,10 @@ hardware configuration is intentionally left for the target machine.
   needed.
 - [I2P With i2pd](docs/networking-i2pd.md) — local proxy endpoints, service
   checks, and when not to open inbound I2P ports.
+- [Desktop Idle Locking and Development Shells](docs/desktop-idle-and-development.md)
+  — session-managed locking, CUDA isolation, activation, and verification.
+- [Newsboat Rust and Security Feeds](docs/newsboat.md) — subscriptions,
+  grouped reading views, refresh timers, and vulnerability-feed coverage.
 
 Two catalogues answer most questions not covered above:
 
@@ -55,6 +59,19 @@ The default template is also `dev-project`, so this works too:
 ```sh
 nix flake init -t /path/to/nixos-solomon
 ```
+
+The repository's own `nix develop` shell contains configuration-maintenance
+tools. The exported templates create independent project environments:
+
+- `dev-project`: general, JS, C/C++, Python, and full shells on x86_64/ARM64
+  Linux, plus a CUDA shell on x86_64 Linux.
+- `c`: a standalone C/C++ environment on both architectures.
+
+CUDA setup is confined to the `cuda` and x86_64 `full` shells. They use a
+CUDA-compatible host compiler and the active NixOS driver under
+`/run/opengl-driver/lib`; ordinary shells do not pull in the toolkit through
+their hooks. See the [template README](templates/dev-project/README.md).
+Existing projects do not change automatically when a template is updated.
 
 ## Private Identity Files
 
@@ -129,13 +146,16 @@ The native profile enables:
   screenshots, Wayland clipboard support, XWayland for X11-only clients, and
   a `greetd`/`tuigreet` login on VT 7 with idle startup to avoid boot-status
   output overwriting the prompt. Press `Super+O` to arrange multiple displays;
-  applying the layout saves it and the seven-workspace assignment for future Sway
-  sessions.
+  applying the layout saves monitor positions for future Sway sessions.
+  Workspaces 1–5 belong to the LG on `DP-1`; 6–9 belong to the Philips on
+  `HDMI-A-1`. `Super+1` through `Super+9` select them; adding Shift moves the
+  focused window. Workspace assignments are managed in
+  `home/desktop/sway/workspaces.nix`, not in `nwg-displays`.
+- Idle locking is a Home Manager systemd user service bound to the Sway
+  session. It locks after 600 seconds and before suspend, and handles
+  `loginctl lock-session`. It does not automatically suspend this desktop PC.
 - I2P through `i2pd`, configured as a client-oriented local service with
   localhost-only HTTP proxy, SOCKS proxy, SAM, I2CP, and web console endpoints.
-- OBS Studio for recording and streaming, with wlroots/PipeWire capture support,
-  per-application PipeWire audio capture, input overlay, vertical canvas, and
-  virtual camera support.
 - GPU Screen Recorder for low-overhead GPU-encoded capture, instant replay, and
   one-command live streaming. See [Streaming](#streaming).
 
@@ -146,10 +166,9 @@ enforcement on. Create keys with `sudo sbctl create-keys` before rebuilding this
 default mode. Override `solomon.boot.secureBoot.enable = false` only for unsigned
 recovery or machines that have not been provisioned yet.
 
-The pinned Sway 1.12 build accepts NVIDIA without the former
-`--unsupported-gpu` option. No undocumented NVIDIA-specific Sway environment
-variables are set; driver support is configured through the NixOS NVIDIA and
-graphics modules.
+The Sway session launcher passes `--unsupported-gpu`, and the session also
+sets `SWAY_UNSUPPORTED_GPU=1`. Sway 1.12 supports both; the actual driver is
+configured through the NixOS NVIDIA and graphics modules.
 
 For an RTX 5080, keep the NVIDIA driver on a current production/new-feature
 branch. If the production branch in your locked Nixpkgs revision is too old for
@@ -158,15 +177,11 @@ the card, switch `hardware.nvidia.branch` to `"new_feature"` or update
 
 ## Streaming
 
-Two tools, deliberately kept side by side:
-
-- **OBS Studio** — the full desk: scenes, overlays, source compositing, an audio
-  mixer, and a virtual camera. Its stream URL and key live in
-  `Settings -> Stream`.
-- **GPU Screen Recorder** — the fast path. Encodes on the GPU with a fraction of
-  the overhead, and streams straight to an ingest URL. `gpu-screen-recorder-gtk`
-  is the GUI; `programs.gpu-screen-recorder.enable` supplies the setcap wrapper
-  that lets KMS capture run without prompting for privileges.
+GPU Screen Recorder provides GPU-encoded recording and streaming straight to
+an ingest URL. `gpu-screen-recorder-gtk` is the GUI;
+`programs.gpu-screen-recorder.enable` supplies the setcap wrapper that lets
+KMS capture run without prompting for privileges. OBS Studio is not currently
+installed or configured by this repository.
 
 ### Declaring a stream destination
 

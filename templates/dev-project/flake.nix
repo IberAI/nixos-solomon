@@ -19,13 +19,13 @@
 
         config = {
           allowUnfree = true;
-          cudaSupport = system == "x86_64-linux";
         };
       };
 
     mkDevShells = system: let
       pkgs = mkPkgs system;
       inherit (pkgs) lib;
+      cudaSupported = system == "x86_64-linux";
 
       commonTools = with pkgs; [
         bashInteractive
@@ -65,7 +65,6 @@
       ];
 
       cTools = with pkgs; [
-        gcc
         gdb
         gnumake
         cmake
@@ -88,46 +87,78 @@
         python3Packages.pytest
       ];
 
-      cudaTools = lib.optionals (system == "x86_64-linux") (with pkgs; [
+      cudaTools = with pkgs; [
         cudaPackages.cudatoolkit
         cudaPackages.cuda_nvcc
         cudaPackages.cuda_cudart
         cudaPackages.cuda_nvprof
-      ]);
+      ];
 
-      mkShell = name: packages:
-        pkgs.mkShell {
+      mkShell = {
+        name,
+        packages,
+        cuda ? false,
+      }:
+        (pkgs.mkShell.override {
+          stdenv =
+            if cuda
+            then pkgs.cudaPackages.backendStdenv
+            else pkgs.stdenv;
+        }) {
           inherit packages;
-          shellHook = ''
-            export PROJECT_NAME="${name}"
-            export NIXPKGS_ALLOW_UNFREE=1
+          shellHook =
+            ''
+              export PROJECT_NAME="${name}"
+              export NIXPKGS_ALLOW_UNFREE=1
 
-            if command -v node >/dev/null 2>&1; then
-              export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-            fi
-
-            if command -v nvcc >/dev/null 2>&1; then
+              if command -v node >/dev/null 2>&1; then
+                export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+              fi
+            ''
+            + lib.optionalString cuda ''
               export CUDA_PATH="${pkgs.cudaPackages.cudatoolkit}"
               export CUDA_HOME="$CUDA_PATH"
 
-              export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [
-              pkgs.cudaPackages.cudatoolkit
-              pkgs.cudaPackages.cuda_cudart
-              pkgs.linuxPackages.nvidiaPackages.stable
-            ]}:''${LD_LIBRARY_PATH:-}"
-            fi
-
-            echo "Loaded ${name} development shell for ${system}."
-          '';
+              export LD_LIBRARY_PATH="/run/opengl-driver/lib:${lib.makeLibraryPath [
+                pkgs.cudaPackages.cudatoolkit
+                pkgs.cudaPackages.cuda_cudart
+              ]}''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+            ''
+            + ''
+              echo "Loaded ${name} development shell for ${system}."
+            '';
         };
-    in {
-      default = mkShell "default" (commonTools ++ nixTools);
-      js = mkShell "js" (commonTools ++ nixTools ++ jsTools);
-      c = mkShell "c" (commonTools ++ nixTools ++ cTools);
-      python = mkShell "python" (commonTools ++ nixTools ++ pythonTools);
-      cuda = mkShell "cuda" (commonTools ++ nixTools ++ cTools ++ cudaTools);
-      full = mkShell "full" (commonTools ++ nixTools ++ jsTools ++ cTools ++ pythonTools ++ cudaTools);
-    };
+    in
+      {
+        default = mkShell {
+          name = "default";
+          packages = commonTools ++ nixTools;
+        };
+        js = mkShell {
+          name = "js";
+          packages = commonTools ++ nixTools ++ jsTools;
+        };
+        c = mkShell {
+          name = "c";
+          packages = commonTools ++ nixTools ++ cTools;
+        };
+        python = mkShell {
+          name = "python";
+          packages = commonTools ++ nixTools ++ pythonTools;
+        };
+        full = mkShell {
+          name = "full";
+          packages = commonTools ++ nixTools ++ jsTools ++ cTools ++ pythonTools ++ lib.optionals cudaSupported cudaTools;
+          cuda = cudaSupported;
+        };
+      }
+      // lib.optionalAttrs cudaSupported {
+        cuda = mkShell {
+          name = "cuda";
+          packages = commonTools ++ nixTools ++ cTools ++ cudaTools;
+          cuda = true;
+        };
+      };
   in {
     devShells = forAllSystems mkDevShells;
 

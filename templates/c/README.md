@@ -17,7 +17,13 @@ direnv allow
 
 ## Shells
 
-- `nix develop`: C stuff c++ c
+- `nix develop` or `nix develop .#c`: GCC, Clang, GDB, CMake, Ninja,
+  pkg-config, LLD, Mold, and Valgrind.
+
+Both shell names are available on `x86_64-linux` and `aarch64-linux`.
+This standalone template has no CUDA dependencies or GPU environment setup.
+For CUDA development on native x86_64 NixOS, use the general development
+template's `cuda` shell instead.
 
 ## Edit First
 

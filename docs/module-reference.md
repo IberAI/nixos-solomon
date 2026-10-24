@@ -139,15 +139,17 @@ The Home Manager output configuration explicitly selects a solid color, so
 Sway never uses its packaged default wallpaper.
 
 `Super+O` opens `nwg-displays`. Its graphical layout uses Sway's output
-management protocol and saves the resulting output positions and workspace
-assignments to writable include files under `~/.config/sway/`. Adjacent output
+management protocol and saves the resulting output positions to the writable
+`~/.config/sway/outputs` include. Adjacent output
 positions define where the pointer crosses between monitors; scaling is
 accounted for by the generated Sway output commands. The launcher passes
-`--num_ws 7` to match the seven workspaces declared by this configuration.
+`--num_ws 9` to match the nine workspace shortcuts. Workspace assignments are
+managed by Nix; `~/.config/sway/workspaces` is deliberately not included, so
+old assignments saved by `nwg-displays` cannot override them.
 
-The pinned Sway 1.12 build no longer exposes the former `--unsupported-gpu`
-option. NVIDIA support is therefore kept in the NixOS graphics module instead
-of relying on undocumented Sway environment variables.
+The Sway session launcher passes `--unsupported-gpu`, and the environment
+sets `SWAY_UNSUPPORTED_GPU=1`. Both are supported by Sway 1.12. The NVIDIA
+driver itself is configured in the NixOS graphics module.
 
 Home Manager's Sway systemd integration derives its D-Bus implementation from
 the evaluated NixOS setting. This keeps its activation command compatible with
@@ -205,19 +207,15 @@ from the sway `startup` block), `nix-ld`, the GPG agent, and base CLI packages.
 - [nix-ld](https://github.com/nix-community/nix-ld)
 - [GnuPG documentation](https://www.gnupg.org/documentation/)
 
-### `modules/streaming/obs.nix` — `solomon.streaming.obs.enable`
+### `modules/streaming/gpu-screen-recorder.nix` — `solomon.streaming.gpuScreenRecorder.enable`
 
-OBS Studio wrapped with `input-overlay`, `obs-pipewire-audio-capture`,
-`obs-vertical-canvas`, and `wlrobs`, plus the virtual camera (which pulls in
-`v4l2loopback` and its modprobe options automatically).
+Enables the GPU Screen Recorder NixOS module and its privileged KMS helper,
+installs the GTK GUI, and creates a `stream-<name>` command for each configured
+target. Keys are read from protected files at runtime. The native profile
+currently declares no targets. OBS Studio is not configured.
 
-- [OBS Studio](https://obsproject.com/kb) · [wiki](https://github.com/obsproject/obs-studio/wiki)
-- [OBS Studio on the NixOS wiki](https://wiki.nixos.org/wiki/OBS_Studio)
-- Plugins: [input-overlay](https://github.com/univrsal/input-overlay) ·
-  [obs-pipewire-audio-capture](https://github.com/dimtpap/obs-pipewire-audio-capture) ·
-  [obs-vertical-canvas](https://github.com/Aitum/obs-vertical-canvas) ·
-  [wlrobs](https://hg.sr.ht/~scoopta/wlrobs)
-- [v4l2loopback](https://github.com/umlaeute/v4l2loopback)
+- [GPU Screen Recorder](https://git.dec05eba.com/gpu-screen-recorder/about/)
+- [Repository streaming setup](../README.md#streaming)
 
 ### `modules/virtualisation/docker.nix` — `solomon.virtualisation.docker.enable`
 
@@ -249,8 +247,54 @@ directly under `~`.
 ### `home/desktop/sway.nix`
 
 The sway **configuration**: keybindings, workspaces, colours, gaps, floating
-rules, the `i3status-rust` bar, startup programs, and the keyboard `input`
+rules, the `i3status-rust` bar, idle locking, and the keyboard `input`
 block.
+
+`home/desktop/sway.nix` imports the focused modules under `home/desktop/sway/`
+and keeps session integration and the desktop package list together:
+
+- `appearance.nix`: fonts, gaps, and window colours.
+- `windows.nix`: borders, floating rules, focus, and workspace behaviour.
+- `workspaces.nix`: workspace-to-monitor assignments and fallback outputs.
+- `input-output.nix`: keyboard, background, and writable monitor-layout includes.
+- `idle.nix`: the session-bound `services.swayidle` systemd user service.
+- `keybindings.nix`: shortcuts and the resize mode.
+- `status-bar.nix`: the Sway bar and `i3status-rust` configuration.
+- `commands.nix`: shared lock-screen and screenshot command derivations.
+
+Workspaces 1–5 are assigned to the LG ULTRAGEAR on `DP-1`; workspaces 6–9
+are assigned to the Philips PHL 242E1GJ on `HDMI-A-1`. Each group lists the
+other monitor as a fallback, so workspaces remain accessible if one monitor
+is disconnected and return to their preferred monitor when it reconnects.
+`Super+1` through `Super+9` select workspaces; adding Shift moves the focused
+window to that workspace. Monitor modes, positions, and scaling still come
+from `nwg-displays`.
+
+After rebuilding, log out of Sway and log back in to apply the assignments to
+a fresh session. Reloading sets the rules for new workspaces but does not
+move existing ones. To keep the current session, move each existing workspace
+to its assigned output, for example:
+
+```sh
+swaymsg 'workspace --no-auto-back-and-forth number 2; move workspace to output DP-1'
+```
+
+See the [Sway 1.12 workspace rules](https://github.com/swaywm/sway/blob/1.12/sway/sway.5.scd)
+and [Home Manager workspaceOutputAssign option](https://github.com/nix-community/home-manager/blob/release-26.05/modules/services/window-managers/i3-sway/lib/options.nix).
+
+`Super+L` and idle locking use the same lock command. It uses upstream
+Swaylock's `--indicator-idle-visible` option; `--indicator` is ambiguous in
+upstream Swaylock and causes it to exit before locking. Authentication is supplied
+by the NixOS Sway module's PAM service, as described in the
+[Home Manager Swaylock options](https://github.com/nix-community/home-manager/blob/release-26.05/modules/programs/swaylock.nix).
+
+The wrapper forwards arguments to Swaylock. Idle locking passes `--daemonize`
+with `swayidle -w`, allowing the service to wait until locking completes rather
+than waiting until the user unlocks. The service locks after 600 seconds,
+before suspend, and on logind lock requests; it does not suspend the machine.
+Home Manager restarts the process on failure and binds it to
+`sway-session.target`. It is not also launched from Sway's startup block.
+See [activation and verification](desktop-idle-and-development.md).
 
 Home Manager uses the unwrapped `pkgs.sway` to validate the generated config at
 build time and reload it after activation. The NixOS-managed wrapper remains
@@ -280,6 +324,15 @@ Mullvad Browser, and the browser-owned variables `BROWSER`,
 KeePassXC. Wireshark is intentionally absent — see `modules/security.nix`.
 
 - [KeePassXC documentation](https://keepassxc.org/docs/)
+
+### `home/apps/newsboat.nix`
+
+Newsboat with the existing electronics/podcast subscriptions plus Rust Blog,
+Inside Rust, This Week in Rust, RustSec, CERT/CC vulnerability notes, and
+CIRCL's aggregated known-exploited-vulnerability feed. Tags and three query
+feeds separate Rust development, Rust security, and general security reading.
+Fetching is hourly, cache vacuuming weekly, and article retention unlimited.
+See [feed URLs, coverage, and usage](newsboat.md).
 
 ### `home/apps/media.nix`, `graphics.nix`, `scientific.nix`, `sioyek.nix`
 

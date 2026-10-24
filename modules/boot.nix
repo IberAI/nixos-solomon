@@ -25,7 +25,7 @@
 
       boot.lanzaboote = {
         enable = true;
-        pkiBundle = config.solomon.boot.secureBoot.pkiBundle;
+        inherit (config.solomon.boot.secureBoot) pkiBundle;
       };
     })
   ];
