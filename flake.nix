@@ -164,6 +164,11 @@
           - `nix develop .#full`
         '';
       };
+      c = {
+        path = ./templates/c;
+        description = "C development flake with all c cpp tools.";
+        welcomeText = "C development flake. nix develop ";
+      };
 
       default = self.templates.dev-project;
     };
